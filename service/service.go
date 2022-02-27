@@ -18,8 +18,8 @@ type service struct {
 }
 
 type Service interface {
-	Generate(context.Context, pb.MissionFormat) (*mission.Mission, error)
-	List(*pb.ListMissionRequest, pb.MissionGenerator_ListServer) error
+	Generate(context.Context, pb.MissionFormat) (*mission.Mission, error) //@todo remove dependencies on transports
+	List(*pb.ListMissionRequest, pb.MissionGenerator_ListServer) error //@todo remove dependencies on transports (any pb.*)
 }
 
 func NewService(logger log.Logger, repo mission.Repository) Service {
@@ -29,7 +29,7 @@ func NewService(logger log.Logger, repo mission.Repository) Service {
 	}
 }
 
-func (s service) Generate(ctx context.Context, format pb.MissionFormat) (*mission.Mission, error) {
+func (s service) Generate(ctx context.Context, format pb.MissionFormat) (*mission.Mission, error) { 
 	m := &mission.Mission{}
 	m.SetFormat(format)
 
@@ -44,7 +44,7 @@ func (s service) Generate(ctx context.Context, format pb.MissionFormat) (*missio
 		return &mission.Mission{}, status.Error(codes.Internal, err.Error())
 	}
 
-	return m, nil //todo
+	return m, nil
 }
 
 func (s service) List(req *pb.ListMissionRequest, server pb.MissionGenerator_ListServer) error {

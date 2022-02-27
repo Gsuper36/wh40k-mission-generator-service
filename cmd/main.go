@@ -23,7 +23,7 @@ func main() {
 	logger = log.With(logger, "ts", log.DefaultTimestampUTC)
 	logger = log.With(logger, "caller", log.DefaultCaller)
 
-	service := service.NewService(logger, nil)
+	service := service.NewService(logger, nil) //@todo repo instance from ENV
 	endpoints := endpoints.MakeEndpoints(service)
 	server := transports.NewGRPCServer(endpoints, logger)
 
@@ -35,7 +35,7 @@ func main() {
 		errs <- fmt.Errorf("%s", <-c)
 	}()
 
-	listener, err := net.Listen("tcp", ":50051")
+	listener, err := net.Listen("tcp", ":50051") //@todo port from ENV
 
 	if err != nil {
 		logger.Log("during", "Listen", "err", err)

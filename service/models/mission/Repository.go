@@ -21,6 +21,9 @@ func (r *PgRepo) FindById(ctx context.Context, id string) (*Mission, error) {
 
 	err := r.pool.QueryRow(ctx, "select * from mission where id=$1", id).Scan(&m.id, &m.title, &m.description, &m.rules, &m.format, &m.deployment)
 
+	//@todo Objectives
+	//@todo Twists
+
 	if err != nil {
 		return &Mission{}, err
 	}
@@ -29,7 +32,7 @@ func (r *PgRepo) FindById(ctx context.Context, id string) (*Mission, error) {
 }
 
 func (r *PgRepo) Save(ctx context.Context, m *Mission) (string, error) {
-	return "", errors.New("unimplemented")
+	return "", errors.New("unimplemented") //@todo
 }
 
 
