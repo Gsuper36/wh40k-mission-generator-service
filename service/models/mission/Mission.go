@@ -10,6 +10,7 @@ import (
 )
 
 type Mission struct {
+	id          string
 	title       string
 	description string
 	rules       string
@@ -17,6 +18,10 @@ type Mission struct {
 	twists	    []*twist.Twist
 	objectives  []*objective.Objective
 	deployment  *deployment.Deployment
+}
+
+func (m *Mission) Id() string {
+	return m.id
 }
 
 func (m *Mission) Title() string {
