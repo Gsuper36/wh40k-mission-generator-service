@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "/pb";
+
+
+enum MissionFormat {
+    COMBAT_PATROL = 0;
+    INCURSION = 1;
+}
+
+message GenerateMissionRequest {
+    MissionFormat missionFormat = 1;
+}
+
+message Mission {
+    string title = 1;
+    string description = 2;
+    string rules = 3;
+    MissionFormat MissionFormat = 4;
+
+    message Twist {
+        string title = 1;
+        string description = 2;
+        string rules = 3;
+    }
+
+    message Objective {
+        string title = 1;
+        string description = 2;
+        string rules = 3;
+    }
+    
+    message Deployment {
+        string imageUrl = 1;
+    }
+
+    repeated Twist twists = 5;
+    repeated Objective objectives = 6;
+    Deployment deployment = 7;
+}
+
+message ListMissionRequest {
+    uint32 page = 1;
+    uint32 count = 2;
+}
+
+service MissionGenerator {
+    rpc Generate(GenerateMissionRequest) returns (Mission);
+    rpc List(ListMissionRequest) returns (stream Mission);
+}
