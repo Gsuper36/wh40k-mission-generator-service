@@ -1,6 +1,9 @@
 package objective
 
-import "errors"
+import (
+	"encoding/json"
+	"errors"
+)
 
 type Objective struct {
 	title       string
@@ -8,7 +11,7 @@ type Objective struct {
 	rules       string
 }
 
-func (o *Objective) Title() string {
+func (o Objective) Title() string {
 	return o.title
 }
 
@@ -22,7 +25,7 @@ func (o *Objective) SetTitle(title string) error {
 	return nil
 }
 
-func (o *Objective) Description() string {
+func (o Objective) Description() string {
 	return o.description
 }
 
@@ -30,7 +33,7 @@ func (o *Objective) SetDescription(description string) {
 	o.description = description
 }
 
-func (o *Objective) Rules() string {
+func (o Objective) Rules() string {
 	return o.rules
 }
 
@@ -42,6 +45,16 @@ func (o *Objective) SetRules(rules string) error {
 	o.rules = rules
 
 	return nil
+}
+
+func (o *Objective) Scan(value interface{}) error {
+	b, ok := value.([]byte)
+
+	if !ok {
+		return errors.New("type assertion to []byte failed")
+	}
+
+	return json.Unmarshal(b, &o) //@todo scan from constructor
 }
 
 func NewObjective(title, rules, description string) (*Objective, error) {

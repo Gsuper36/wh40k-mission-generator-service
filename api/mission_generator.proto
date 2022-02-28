@@ -4,6 +4,7 @@ package pb;
 
 option go_package = "/pb";
 
+import "google/api/annotations.proto";
 
 enum MissionFormat {
     COMBAT_PATROL = 0;
@@ -47,6 +48,15 @@ message ListMissionRequest {
 }
 
 service MissionGenerator {
-    rpc Generate(GenerateMissionRequest) returns (Mission);
-    rpc List(ListMissionRequest) returns (stream Mission);
+    rpc Generate(GenerateMissionRequest) returns (Mission) {
+        option (google.api.http) = {
+            get: "/v1/missions/generate"
+        };
+    }
+
+    rpc List(ListMissionRequest) returns (stream Mission) {
+        option (google.api.http) = {
+            get: "/v1/missions"
+        };
+    }
 }

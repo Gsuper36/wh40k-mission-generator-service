@@ -20,11 +20,11 @@ type Mission struct {
 	deployment  *deployment.Deployment
 }
 
-func (m *Mission) Id() string {
+func (m Mission) Id() string {
 	return m.id
 }
 
-func (m *Mission) Title() string {
+func (m Mission) Title() string {
 	return m.title
 }
 
@@ -38,7 +38,7 @@ func (m *Mission) SetTitle(title string) error {
 	return nil
 }
 
-func (m *Mission) Description() string {
+func (m Mission) Description() string {
 	return m.description
 }
 
@@ -46,7 +46,7 @@ func (m *Mission) SetDescription(description string) {
 	m.description = description
 }
 
-func (m *Mission) Rules() string {
+func (m Mission) Rules() string {
 	return m.rules
 }
 
@@ -60,7 +60,7 @@ func (m *Mission) SetRules(rules string) error {
 	return nil
 }
 
-func (m *Mission) Format() pb.MissionFormat {
+func (m Mission) Format() pb.MissionFormat {
 	return m.format
 }
 
@@ -68,7 +68,7 @@ func (m *Mission) SetFormat(format pb.MissionFormat) {
 	m.format = format
 } 
 
-func (m *Mission) Twists() []*twist.Twist {
+func (m Mission) Twists() []*twist.Twist {
 	return m.twists
 }
 
@@ -76,7 +76,7 @@ func (m *Mission) AddTwist(t *twist.Twist) {
 	m.twists = append(m.twists, t)
 }
 
-func (m *Mission) Objectives() []*objective.Objective {
+func (m Mission) Objectives() []*objective.Objective {
 	return m.objectives
 }
 
@@ -84,7 +84,7 @@ func (m *Mission) AddObjective(o *objective.Objective) {
 	m.objectives = append(m.objectives, o)
 }
 
-func (m *Mission) Deployment() *deployment.Deployment {
+func (m Mission) Deployment() *deployment.Deployment {
 	return m.deployment
 }
 

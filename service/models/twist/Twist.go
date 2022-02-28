@@ -1,6 +1,9 @@
 package twist
 
-import "errors"
+import (
+	"encoding/json"
+	"errors"
+)
 
 type Twist struct {
 	title       string
@@ -43,6 +46,16 @@ func (t *Twist) SetRules(rules string) error {
 
 	return nil
 } 
+
+func (t *Twist) Scan(value interface{}) error {
+	b, ok := value.([]byte)
+
+	if !ok {
+		return errors.New("type assertion to []byte failed")
+	}
+
+	return json.Unmarshal(b, &t) //@todo scan from constructor
+}
 
 func NewTwist(title, description, rules string) (*Twist, error) {
 	t := &Twist{

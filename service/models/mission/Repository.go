@@ -19,10 +19,16 @@ type PgRepo struct {
 func (r *PgRepo) FindById(ctx context.Context, id string) (*Mission, error) {
 	m := &Mission{}
 
-	err := r.pool.QueryRow(ctx, "select * from mission where id=$1", id).Scan(&m.id, &m.title, &m.description, &m.rules, &m.format, &m.deployment)
-
-	//@todo Objectives
-	//@todo Twists
+	err := r.pool.QueryRow(ctx, "select * from mission where id=$1", id).Scan(
+		&m.id, 
+		&m.title, 
+		&m.description, 
+		&m.rules, 
+		&m.format, 
+		&m.deployment, 
+		&m.twists, 
+		&m.objectives,
+	) //@todo rewrite, move this code to infrastructure
 
 	if err != nil {
 		return &Mission{}, err
