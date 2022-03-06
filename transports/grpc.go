@@ -2,7 +2,6 @@ package transports
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/Gsuper36/wh40k-mission-generator-service/endpoints"
 	"github.com/Gsuper36/wh40k-mission-generator-service/pb"
