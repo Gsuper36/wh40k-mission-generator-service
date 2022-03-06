@@ -40,13 +40,14 @@ func main() {
 	mux := runtime.NewServeMux()
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 
-	repository, err := mission.NewPostgresRepo(context.Background(), "postgres://mission_generator:mission_generator@localhost:5432/mission_generator") //@todo repo instance from ENV
+	// repository, err := mission.NewPostgresRepo(context.Background(), "postgres://mission_generator:mission_generator@localhost:5432/mission_generator") //@todo repo instance from ENV
 	
+	repository := mission.NewInMemoryRepo()
 
-	if err != nil {
-		logger.Log("during", "connect db", "err", err)
-		os.Exit(1)
-	}
+	// if err != nil {
+		// logger.Log("during", "connect db", "err", err)
+		// os.Exit(1)
+	// }
 
 	listener, err := net.Listen("tcp", *grpcServerEnpoint) //@todo port from ENV
 
@@ -77,13 +78,13 @@ func main() {
 	go func() {
 		baseServer := grpc.NewServer()
 		pb.RegisterMissionGeneratorServer(baseServer, server)
+		level.Info(logger).Log("msg", "gRPC server is starting")
 		err := baseServer.Serve(listener)
 
 		if err != nil {
 			errs <- err
 		}
 
-		level.Info(logger).Log("msg", "gRPC server started succesfully")
 	}()
 
 	go func ()  {
@@ -92,13 +93,13 @@ func main() {
 		if err != nil {
 			errs <- err
 		}
+		level.Info(logger).Log("msg", "Proxy server is starting")
 		err = http.ListenAndServe(":6011", mux)
 
 		if err != nil {
 			errs <- err
 		}
 
-		level.Info(logger).Log("msg", "Proxy server started succesfully")
 	}() //@todo move proxy to another file and run in different container !!! this stuff here is only for testing purposes
 
 	level.Error(logger).Log("exit", <-errs)

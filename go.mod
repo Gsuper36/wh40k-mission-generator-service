@@ -11,6 +11,7 @@ require (
 )
 
 require (
+	github.com/gofrs/uuid v4.0.0+incompatible
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.7.3
 	google.golang.org/genproto v0.0.0-20220118154757-00ab72f36ad5
 )

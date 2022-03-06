@@ -9,7 +9,7 @@ type Deployment struct {
 	imageUrl string
 }
 
-func (d *Deployment) ImageUrl() string {
+func (d Deployment) ImageUrl() string {
 	return d.imageUrl
 }
 
@@ -25,7 +25,7 @@ func (d *Deployment) SetImageUrl(img string) error {
 	return nil
 }
 
-func (d *Deployment) isValidUrl(path string) bool {
+func (d Deployment) isValidUrl(path string) bool {
 	_, err := url.ParseRequestURI(path)
 
 	if err != nil {
