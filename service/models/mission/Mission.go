@@ -15,7 +15,7 @@ type Mission struct {
 	description string
 	rules       string
 	format      pb.MissionFormat
-	twists	    []*twist.Twist
+	twists      []*twist.Twist
 	objectives  []*objective.Objective
 	deployment  *deployment.Deployment
 }
@@ -66,7 +66,7 @@ func (m Mission) Format() pb.MissionFormat {
 
 func (m *Mission) SetFormat(format pb.MissionFormat) {
 	m.format = format
-} 
+}
 
 func (m Mission) Twists() []*twist.Twist {
 	return m.twists
@@ -88,17 +88,17 @@ func (m Mission) Deployment() *deployment.Deployment {
 	return m.deployment
 }
 
-func (m *Mission) SetDeployemnt(d *deployment.Deployment) {
+func (m *Mission) SetDeployment(d *deployment.Deployment) {
 	m.deployment = d
 }
 
 func NewMission(title, description, rules string, format pb.MissionFormat, twists []*twist.Twist, deployment *deployment.Deployment, objectives []*objective.Objective) (*Mission, error) {
 	m := &Mission{
-		objectives: objectives,
-		twists: twists,
+		objectives:  objectives,
+		twists:      twists,
 		description: description,
-		format: format,
-		deployment: deployment,
+		format:      format,
+		deployment:  deployment,
 	}
 
 	err := m.SetTitle(title)

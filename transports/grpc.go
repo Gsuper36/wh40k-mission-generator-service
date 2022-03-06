@@ -2,6 +2,7 @@ package transports
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/Gsuper36/wh40k-mission-generator-service/endpoints"
 	"github.com/Gsuper36/wh40k-mission-generator-service/pb"
@@ -45,13 +46,41 @@ func decodeGenerateRequest(_ context.Context, request interface{}) (interface{},
 func encodeGenerateResponse(_ context.Context, response interface{}) (interface{}, error) {
 	resp := response.(*mission.Mission)
 
+	wrapTwists := func () []*pb.Mission_Twist {
+		twists := make([]*pb.Mission_Twist, len(resp.Twists()))
+		
+		for _, t := range resp.Twists() {
+			twists = append(twists, &pb.Mission_Twist{
+				Title: t.Title(),
+				Description: t.Description(),
+				Rules: t.Rules(),
+			})
+		}
+
+		return twists
+	}
+
+	wrapObjectives := func() []*pb.Mission_Objective {
+		objectives := make([]*pb.Mission_Objective, len(resp.Objectives()))
+
+		for _, o := range resp.Objectives() {
+			objectives = append(objectives, &pb.Mission_Objective{
+				Title: o.Title(),
+				Description: o.Description(),
+				Rules: o.Rules(),
+			})
+		}
+
+		return objectives
+	}
+
 	return &pb.Mission{
 		Title: resp.Title(),
 		Description: resp.Description(),
 		Rules: resp.Rules(),
 		MissionFormat: resp.Format(),
-		//@todo wrap Twists: resp.Twists(),
-		//@todo wrap Objectives: resp.Objectives()
+		Twists: wrapTwists(),
+		Objectives: wrapObjectives(),
 		Deployment: &pb.Mission_Deployment{ImageUrl: resp.Deployment().ImageUrl()},
 	}, nil
 } 

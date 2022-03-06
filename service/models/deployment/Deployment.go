@@ -14,9 +14,7 @@ func (d Deployment) ImageUrl() string {
 }
 
 func (d *Deployment) SetImageUrl(img string) error {
-	if d.isValidUrl(
-		img,
-	) {
+	if !d.isValidUrl(img) {
 		return errors.New("invalid url")
 	}
 

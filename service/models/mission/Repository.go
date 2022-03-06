@@ -34,6 +34,7 @@ func (r *InMemoryRepo) Save(ctx context.Context, m *Mission) (string, error) {
 		return "", err
 	}
 
+	m.id = id.String()
 	r.missions[id.String()] = m
 
 	return id.String(), nil
