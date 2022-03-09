@@ -13,7 +13,7 @@ import (
 type gRPCServer struct {
 	pb.UnimplementedMissionGeneratorServer
 	generate gt.Handler
-	list gt.Handler
+	// list gt.Handler
 }
 
 func NewGRPCServer(endpoints endpoints.Endpoints, logger log.Logger) pb.MissionGeneratorServer {
@@ -46,7 +46,7 @@ func encodeGenerateResponse(_ context.Context, response interface{}) (interface{
 	resp := response.(*mission.Mission)
 
 	wrapTwists := func () []*pb.Mission_Twist {
-		twists := make([]*pb.Mission_Twist, len(resp.Twists()))
+		twists := make([]*pb.Mission_Twist, 0)
 		
 		for _, t := range resp.Twists() {
 			twists = append(twists, &pb.Mission_Twist{
@@ -60,7 +60,7 @@ func encodeGenerateResponse(_ context.Context, response interface{}) (interface{
 	}
 
 	wrapObjectives := func() []*pb.Mission_Objective {
-		objectives := make([]*pb.Mission_Objective, len(resp.Objectives()))
+		objectives := make([]*pb.Mission_Objective, 0)
 
 		for _, o := range resp.Objectives() {
 			objectives = append(objectives, &pb.Mission_Objective{

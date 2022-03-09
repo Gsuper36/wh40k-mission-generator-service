@@ -13,7 +13,10 @@ import (
 	"github.com/Gsuper36/wh40k-mission-generator-service/endpoints"
 	"github.com/Gsuper36/wh40k-mission-generator-service/pb"
 	"github.com/Gsuper36/wh40k-mission-generator-service/service"
+	"github.com/Gsuper36/wh40k-mission-generator-service/service/models/deployment"
 	"github.com/Gsuper36/wh40k-mission-generator-service/service/models/mission"
+	"github.com/Gsuper36/wh40k-mission-generator-service/service/models/objective"
+	"github.com/Gsuper36/wh40k-mission-generator-service/service/models/twist"
 	"github.com/Gsuper36/wh40k-mission-generator-service/transports"
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
@@ -42,7 +45,10 @@ func main() {
 
 	// repository, err := mission.NewPostgresRepo(context.Background(), "postgres://mission_generator:mission_generator@localhost:5432/mission_generator") //@todo repo instance from ENV
 	
-	repository := mission.NewInMemoryRepo()
+	mRepo := mission.NewInMemoryRepo()
+	oRepo := objective.NewInMemoryRepo()
+	tRepo := twist.NewInMemoryRepo()
+	dRepo := deployment.NewInMemoryRepo()
 
 	// if err != nil {
 		// logger.Log("during", "connect db", "err", err)
@@ -56,7 +62,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	service := service.NewService(logger, repository) 
+	service := service.NewService(logger, mRepo, oRepo, tRepo, dRepo) 
 	endpoints := endpoints.MakeEndpoints(service)
 	server := transports.NewGRPCServer(endpoints, logger)
 

@@ -76,12 +76,20 @@ func (m *Mission) AddTwist(t *twist.Twist) {
 	m.twists = append(m.twists, t)
 }
 
+func (m *Mission) SetTwists(twst []*twist.Twist) {
+	m.twists = twst
+}
+
 func (m Mission) Objectives() []*objective.Objective {
 	return m.objectives
 }
 
 func (m *Mission) AddObjective(o *objective.Objective) {
 	m.objectives = append(m.objectives, o)
+}
+
+func (m *Mission) SetObjectives(objs []*objective.Objective) {
+	m.objectives = objs
 }
 
 func (m Mission) Deployment() *deployment.Deployment {
