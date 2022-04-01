@@ -11,6 +11,8 @@
         "php": "^7.3",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^2.0",
+        "google/protobuf": "^3.19",
+        "grpc/grpc": "^1.42",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.0",
         "laravel/tinker": "^2.0"
