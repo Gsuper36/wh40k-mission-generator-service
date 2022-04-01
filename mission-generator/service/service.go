@@ -49,7 +49,7 @@ func (s service) Generate(ctx context.Context, format pb.MissionFormat) (*missio
 	d, err := s.deploymentRepository.Random(ctx)
 
 	if err != nil {
-		s.logger.Log(err)
+		s.logger.Log(err) // @todo Remove Log from business logic
 		return &mission.Mission{}, err
 	}
 
