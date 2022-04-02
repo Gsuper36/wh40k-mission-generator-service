@@ -31,8 +31,9 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN docker-php-ext-install pdo pdo_pgsql mbstring zip exif pcntl
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/
 RUN docker-php-ext-install gd
-RUN pecl install grpc && docker-php-ext-enable grpc
-
+RUN pecl install grpc
+RUN pecl install protobuf-3.19.4
+RUN docker-php-ext-enable grpc protobuf
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 

@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"flag"
 	"fmt"
 	"net"
 	"net/http"
@@ -26,12 +25,13 @@ import (
 )
 
 var (
-	grpcServerEnpoint = flag.String("grpc-server-endpoint", "localhost:9090", "gRPC server endpoint")
+	grpcServerPort = getEnv("APP_PORT", "50051")
 )
 
 
 func main() {
 	var logger log.Logger
+	grpcServerEndpoint := "localhost:" + grpcServerPort;
 	logger = log.NewLogfmtLogger(os.Stdout)
 	logger = log.With(logger, "ts", log.DefaultTimestampUTC)
 	logger = log.With(logger, "caller", log.DefaultCaller)
@@ -55,7 +55,7 @@ func main() {
 		// os.Exit(1)
 	// }
 
-	listener, err := net.Listen("tcp", *grpcServerEnpoint) //@todo port from ENV
+	listener, err := net.Listen("tcp", grpcServerEndpoint) //@todo port from ENV
 
 	if err != nil {
 		logger.Log("during", "Listen", "err", err)
@@ -94,7 +94,7 @@ func main() {
 	}()
 
 	go func ()  {
-		err := pb.RegisterMissionGeneratorHandlerFromEndpoint(ctx, mux, *grpcServerEnpoint, opts)
+		err := pb.RegisterMissionGeneratorHandlerFromEndpoint(ctx, mux, grpcServerEndpoint, opts)
 		
 		if err != nil {
 			errs <- err
@@ -109,4 +109,14 @@ func main() {
 	}() //@todo move proxy to another file and run in different container !!! this stuff here is only for testing purposes
 
 	level.Error(logger).Log("exit", <-errs)
+}
+
+func getEnv(key, def string) string {
+	v, exists := os.LookupEnv(key)
+
+	if !exists {
+		return def
+	}
+
+	return v
 }
