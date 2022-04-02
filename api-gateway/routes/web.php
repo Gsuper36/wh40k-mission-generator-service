@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Pb\GenerateMissionRequest;
+use Pb\MissionGeneratorClient;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', function (MissionGeneratorClient $client) {
+    $call = $client->Generate(
+        new GenerateMissionRequest([])
+    );
+    $mission = $call->wait()[0];
+
+    return $mission ? $mission->getTitle() : null;
 });

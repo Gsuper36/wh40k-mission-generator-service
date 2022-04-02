@@ -31,7 +31,7 @@ var (
 
 func main() {
 	var logger log.Logger
-	grpcServerEndpoint := "localhost:" + grpcServerPort;
+	grpcServerEndpoint := ":" + grpcServerPort;
 	logger = log.NewLogfmtLogger(os.Stdout)
 	logger = log.With(logger, "ts", log.DefaultTimestampUTC)
 	logger = log.With(logger, "caller", log.DefaultCaller)

@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Pb\MissionGeneratorClient;
+use Grpc\ChannelCredentials;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,7 +15,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(MissionGeneratorClient::class, function ($app) {
+            return new MissionGeneratorClient(config('grpc.mission_generator.address'), [
+                "credentials" => ChannelCredentials::createInsecure()
+            ]);
+        });
     }
 
     /**
