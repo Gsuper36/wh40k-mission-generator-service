@@ -15,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(MissionGeneratorClient::class, function ($app) {
+        $this->app->bind(MissionGeneratorClient::class, function($app) {
             return new MissionGeneratorClient(config('grpc.mission_generator.address'), [
                 "credentials" => ChannelCredentials::createInsecure()
             ]);

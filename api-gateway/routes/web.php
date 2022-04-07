@@ -16,10 +16,5 @@ use Pb\MissionGeneratorClient;
 */
 
 Route::get('/', function (MissionGeneratorClient $client) {
-    $call = $client->Generate(
-        new GenerateMissionRequest([])
-    );
-    $mission = $call->wait()[0];
-
-    return $mission ? $mission->getTitle() : null;
+    return "DO NOT JUDGE MY CODE, I'M HAVING FUN!!!";
 });
