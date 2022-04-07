@@ -22,6 +22,7 @@ class MissionController extends Controller
             throw new Exception("Couldn't generate mission: {$error}");
         }
 
-        return  $mission->serializeToJsonString();
+        //@todo Do it normally
+        return response($mission->serializeToJsonString(), 200, ["Content-Type" => "application/json"]);
     }
 }
