@@ -15,6 +15,6 @@ use Pb\MissionGeneratorClient;
 |
 */
 
-Route::get('/', function (MissionGeneratorClient $client) {
+Route::get('/', function () {
     return "DO NOT JUDGE MY CODE, I'M HAVING FUN!!!";
 });
