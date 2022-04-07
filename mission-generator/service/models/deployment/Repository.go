@@ -4,10 +4,39 @@ import (
 	"context"
 	"errors"
 	"math/rand"
+
+	"github.com/jackc/pgx/v4"
 )
 
 type Repository interface {
 	Random(ctx context.Context) (*Deployment, error)
+}
+
+type PostgresRepo struct {
+	conn *pgx.Conn;
+}
+
+func (r *PostgresRepo) Random(ctx context.Context) (*Deployment, error) {
+	var imageUrl string
+	err := r.conn.QueryRow(ctx, "select image_url from deployment order by random() limit 1").Scan(&imageUrl)
+
+	if err != nil {
+		return &Deployment{}, err
+	}
+
+	d, err := NewDeployment(imageUrl)
+
+	if err != nil {
+		return &Deployment{}, err
+	}
+
+	return d, nil
+}
+
+func NewPostgresRepo(conn *pgx.Conn) *PostgresRepo {
+	r := &PostgresRepo{conn: conn}
+
+	return r
 }
 
 type InMemoryRepo struct {

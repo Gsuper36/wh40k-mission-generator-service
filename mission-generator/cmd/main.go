@@ -20,12 +20,14 @@ import (
 	"github.com/go-kit/log"
 	"github.com/go-kit/log/level"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/jackc/pgx/v4"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
 var (
 	grpcServerPort = getEnv("APP_PORT", "50051")
+	dbUrl = getEnv("DB_URL", "postgres://mission_generator:mission_generator@localhost:5432/mission_generator")
 )
 
 
@@ -40,15 +42,26 @@ func main() {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
+	dbCtx := context.Background()
+	dbCtx, dbCancel := context.WithCancel(dbCtx)
+	defer dbCancel()
+
+	conn, err := pgx.Connect(dbCtx, dbUrl)
+
+	if err != nil {
+		logger.Log("during", "connect db", "err", err)
+		os.Exit(1)
+	}
+
 	mux := runtime.NewServeMux()
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 
 	// repository, err := mission.NewPostgresRepo(context.Background(), "postgres://mission_generator:mission_generator@localhost:5432/mission_generator") //@todo repo instance from ENV
 	
 	mRepo := mission.NewInMemoryRepo()
-	oRepo := objective.NewInMemoryRepo()
-	tRepo := twist.NewInMemoryRepo()
-	dRepo := deployment.NewInMemoryRepo()
+	oRepo := objective.NewPostgresRepo(conn)
+	tRepo := twist.NewPostgresRepo(conn)
+	dRepo := deployment.NewPostgresRepo(conn)
 
 	// if err != nil {
 		// logger.Log("during", "connect db", "err", err)

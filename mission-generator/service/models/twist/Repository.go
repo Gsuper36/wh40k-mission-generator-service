@@ -4,10 +4,51 @@ import (
 	"context"
 	"errors"
 	"math/rand"
+
+	"github.com/jackc/pgx/v4"
 )
 
 type Repository interface {
 	Random(ctx context.Context, max int) ([]*Twist, error)
+}
+
+type PostgresRepo struct {
+	conn *pgx.Conn
+}
+
+func (r *PostgresRepo) Random(ctx context.Context, max int) ([]*Twist, error) {
+	var (
+		title 		string
+		description string 
+		rules 		string
+		tws 		[]*Twist
+	)
+
+	rows, err := r.conn.Query(ctx, "select title, description, rules from twist order by random() limit $1", max)
+
+	if err != nil {
+		return []*Twist{}, err
+	}
+
+	for rows.Next() {
+		rows.Scan(&title, &description, &rules)
+
+		t, err := NewTwist(title, description, rules)
+
+		if err != nil {
+			return []*Twist{}, err
+		}
+
+		tws = append(tws, t)
+	}
+
+	return tws, nil
+}
+
+func NewPostgresRepo(conn *pgx.Conn) *PostgresRepo {
+	r := &PostgresRepo{conn: conn}
+
+	return r
 }
 
 type InMemoryRepo struct {
