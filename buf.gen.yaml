@@ -1,14 +1,16 @@
 version: v1
 plugins:
   - name: go
-    out: pb/
+    out: mission-generator/pb/
     opt:
       - paths=source_relative
   - name: go-grpc
-    out: pb/
+    out: mission-generator/pb/
     opt:
       - paths=source_relative
   - name: grpc-gateway
-    out: pb/
+    out: mission-generator/pb/
     opt:
       - paths=source_relative
+  - name: openapiv2
+    out: gen/openapiv2

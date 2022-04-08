@@ -1,15 +1,40 @@
+include .makeenv
+
+SHELL = /bin/sh
+UID := $(shell id -u)
+GID := $(shell id -g)
+PWD := $(shell pwd)
+
+export APP_NAME
+export API_PORT
+export MG_PORT
+export DB_PORT
+export DB_PASSWORD
+export DB_USER
+export UID
+export GID
+
+build:
+	docker-compose build
+	@mkdir -p ./docker/var/postgres/dbdata
+	@chown -R ${UID}:${GID} ./docker/var/postgres
+
+up:
+	docker-compose up -d --no-build
+
+down: 
+	docker-compose down
+
 proto-compile:
-	protoc -I pb/ \
-	pb/mission_generator.proto \
-	--go_out=. \
-	--go-grpc_out=. 
+	@rm -rf proto/gen
+	@mkdir -p proto/gen
+	@chown ${UID}:${GID} -R proto/gen
+	docker run -v ${PWD}/proto:/defs --user=${UID}:${GID} namely/protoc-all -f mission_generator.proto -i . -l php
+	docker run -v ${PWD}/proto:/defs --user=${UID}:${GID} namely/protoc-all -f google/api/annotations.proto -l php
+	docker run -v ${PWD}/proto:/defs --user=${UID}:${GID} namely/protoc-all -f google/api/http.proto -l php
+	cp -r proto/gen/pb-php/* api-gateway
+	docker run -v ${PWD}/proto:/defs --user=${UID}:${GID} namely/protoc-all -f mission_generator.proto -l go --grpc-out=.
+	cp -r proto/gen/pb-go/pb/* mission-generator/pb
 
-proto-gateway-compile:
-	protoc -I pb/ --grpc-gateway_out pb/ \
-    --grpc-gateway_opt logtostderr=true \
-    --grpc-gateway_opt paths=source_relative \
-    --grpc-gateway_opt generate_unbound_methods=true \
-	pb/mission_generator.proto
-
-buf-compile:
-	
+pull-protoc-image:
+	docker pull namely/protoc-all
